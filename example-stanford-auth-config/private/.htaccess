@@ -1,0 +1,4 @@
+<Files "sp.(crt|key)">
+  Require all denied
+</Files>
+
