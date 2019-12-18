@@ -403,7 +403,7 @@ class Stanford_Auth {
         'NameIDFormat'             => OneLogin\Saml2\Constants::NAMEID_PERSISTENT,
         'assertionConsumerService' => array(
           'url'     => home_url( 'wp-login.php' ),
-          'binding' => OneLogin\Saml2\Constants::BINDING_HTTP_REDIRECT,
+          'binding' => OneLogin\Saml2\Constants::BINDING_HTTP_POST,
         ),
       ),
       'idp'     => array(
