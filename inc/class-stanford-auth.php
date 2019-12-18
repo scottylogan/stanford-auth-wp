@@ -372,7 +372,11 @@ class Stanford_Auth {
     $imp = new OneLogin\Saml2\IdPMetadataParser ();
     
     $idp_metadata = $imp->parseRemoteXml(
-      $idp[ 'md_url' ], $idp[ 'entityId' ], null, $idp[ 'sso_binding' ], null
+      $idp[ 'md_url' ],
+      $idp[ 'entityId' ],
+      OneLogin\Saml2\Constants::NAMEID_PERSISTENT,
+      OneLogin\Saml2\Constants::BINDING_HTTP_REDIRECT,
+      null
     );
 
     $sp_cert      = self::get_option( 'sp_cert' );
@@ -396,10 +400,10 @@ class Stanford_Auth {
         'entityId'                 => self::get_option( 'entityId' ),
         'x509cert'                 => $sp_cert,
         'privateKey'               => $sp_key,
-        'NameIDFormat'             => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+        'NameIDFormat'             => OneLogin\Saml2\Constants::NAMEID_PERSISTENT,
         'assertionConsumerService' => array(
           'url'     => home_url( 'wp-login.php' ),
-          'binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+          'binding' => OneLogin\Saml2\Constants::BINDING_HTTP_REDIRECT,
         ),
       ),
       'idp'     => array(
@@ -417,19 +421,19 @@ class Stanford_Auth {
       ),
       'contactPerson' => array(
         'technical' => array(
-          'givenName'    => get_bloginfo( 'name' ) . ' Admin',
+          'givenName'    => esc_html( get_bloginfo( 'name' ) . ' Admin' ),
           'emailAddress' => get_bloginfo( 'admin_email' ),
         ),
         'support' => array(
-          'givenName'    => get_bloginfo( 'name' ) . ' Admin',
+          'givenName'    => esc_html( get_bloginfo( 'name' ) . ' Admin' ),
           'emailAddress' => get_bloginfo( 'admin_email' ),
         ),
       ),
 
       'organization' => array(
         'en-US' => array(
-          'name'        => get_bloginfo( 'name' ),
-          'displayname' => get_bloginfo( 'name' ),
+          'name'        => esc_html( get_bloginfo( 'name' ) ),
+          'displayname' => esc_html( get_bloginfo( 'name' ) ),
           'url'         => get_bloginfo( 'url' ),
         ),
       ),
