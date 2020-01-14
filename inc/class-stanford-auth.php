@@ -660,9 +660,10 @@ class Stanford_Auth {
     if ( self::get_option( 'deny_unmapped_users' ) &&
          ! isset( $attributes[ '__stanford_auth_mapped__' ] )
     ) {
-
       self:debug( 'user is not mapped, returning error' );
-      $ret = new WP_Error( 'unmapped_user_denied','You are not authorized to access this content' );
+      $ret = new WP_Error( 'unmapped_user_denied',
+                           'You are not authorized to access this content' );
+      }
     }
 
     return $ret;
