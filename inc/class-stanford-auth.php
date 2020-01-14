@@ -239,7 +239,7 @@ class Stanford_Auth {
    * @return mixed
    */
   public static function plugin_settings_link( $links ) {
-    $a = '<a href="' . menu_page_url( 'saml-metadata', false ) . '">' . esc_html__( 'SAML Metadata', 'saml-metadata' ) . '</a>';
+    $a = '<a href="' . menu_page_url( 'saml_metadata', false ) . '">' . esc_html__( 'SAML Metadata', 'saml_metadata' ) . '</a>';
     array_push( $links, $a );
     return $links;
   }
