@@ -221,8 +221,27 @@ class Stanford_Auth {
     if ( ! isset( self::$instance ) ) {
       self::$instance = new Stanford_Auth;
       add_action( 'init', array( self::$instance, 'action_init' ) );
+
+      add_filter( 'plugin_action_links_' . plugin_basename( dirname( plugin_dir_path( __FILE__ ) ) )
+                                         . '/wp-saml-auth.php',
+                  array( self::$instance, 'plugin_settings_link' )
+      );
+
     }
     return self::$instance;
+  }
+
+
+  /**
+   * Add Settings link to plugins page
+   *
+   * @param array $links existing plugin links.
+   * @return mixed
+   */
+  public static function plugin_settings_link( $links ) {
+    $a = '<a href="' . menu_page_url( 'saml-metadata', false ) . '">' . esc_html__( 'SAML Metadata', 'saml-metadata' ) . '</a>';
+    array_push( $links, $a );
+    return $links;
   }
 
   /**
