@@ -77,6 +77,21 @@ class Stanford_Auth {
      */
     'entityId' => '',
 
+
+    /**
+     * Allow regular Wordpress logins?
+     *
+     * @param bool
+     */
+    'permit_wp_users' => true,
+
+    /**
+     * Default user to use for unmapped users
+     *
+     * @param string
+     */
+    'default_user' => null,
+
     /**
      * Attribute map - mapping between attribute values and users / roles
      *
