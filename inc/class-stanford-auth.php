@@ -223,7 +223,7 @@ class Stanford_Auth {
       add_action( 'init', array( self::$instance, 'action_init' ) );
 
       add_filter( 'plugin_action_links_' . plugin_basename( dirname( plugin_dir_path( __FILE__ ) ) )
-                                         . '/wp-saml-auth.php',
+                                         . '/stanford-auth.php',
                   array( self::$instance, 'plugin_settings_link' )
       );
 
