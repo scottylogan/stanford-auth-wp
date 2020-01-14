@@ -375,7 +375,7 @@ class Stanford_Auth {
   /**
    */
   public function add_metadata_page () {
-    add_management_page('SAML Metadata', 'SAML Metadata', 'manage_options', 'saml_metadata', array ($this, 'metadata_page' ) );
+    add_options_page('SAML Metadata', 'SAML Metadata', 'manage_options', 'saml_metadata', array ($this, 'metadata_page' ) );
   }
 
 
