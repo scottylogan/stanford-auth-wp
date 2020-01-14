@@ -573,6 +573,10 @@ class Stanford_Auth {
    */
   public function map_attributes ( $attributes, $provider ) {
 
+    $roles = array();
+    $user  = null;
+    $default_user = self::get_option( 'default_user' );
+
     foreach ( self::get_option( 'attribute_map' ) as $attr_name => $value_map ) {
 
       if ( isset( $attributes[ $attr_name ] ) ) {
@@ -587,17 +591,25 @@ class Stanford_Auth {
             $pair = explode(':', $userrole);
 
             if ( $pair[0] === 'role') {
-              $attributes['role'] = array( $pair[1] );
-              $attributes['__stanford_auth_mapped__'] = array( 'role' );
+              $roles[] = $pair[1];
             } elseif ( $pair[0] === 'eppn' || $pair[0] === 'user' ) {
-              $attributes[ self::$attribute_names[ 'user_login_attribute' ] ] = array( $pair[1] );
-              $attributes['__stanford_auth_mapped__'] = array( 'user' );
+              $user = $pair[1];
             }
           }
         }
       }
     }
 
+    // role mappings take precedence over user mapping
+    if ( count($roles) > 0) {
+      $attributes['__stanford_auth_mapped__'] = array( 'role' );
+      $attributes['role'] = $roles;
+    } else if ( !empty( $user ) || !empty( $default_user ) ) {
+      $attributes['__stanford_auth_mapped__'] = array( 'user' );
+      $attributes[ self::$attribute_names[ 'user_login_attribute' ] ] = array(
+        empty( $user ) ? $default_user : $user
+      );
+    }
     return $attributes;
   }
 
@@ -610,6 +622,8 @@ class Stanford_Auth {
    */
   public function fix_role_before_insert ( $user_args, $attributes ) {
     if ( !empty( $attributes[ 'role' ][0] ) ) {
+      // this runs before the call to wp_insert_user, which only takes
+      // a single role, so return the first role
       $user_args['role'] = $attributes[ 'role' ][0];
     }
     return $user_args;
@@ -621,9 +635,12 @@ class Stanford_Auth {
 
     if ( isset( $attributes[ '__stanford_auth_mapped__' ] ) && $attributes[ '__stanford_auth_mapped__' ][0] === 'role' ) {
 
-      // update user role
+      // update user role(s)
       if ( !empty( $attributes['role'][0] ) ) {
-        $user->set_role( $attributes['role'][0] );
+        $user->set_role( '' ); // remove existing roles
+        foreach ( $attributes['role'] as $role ) {
+          $user->add_role( $role );
+        }
       }
 
       // update user attributes *except* user_login
